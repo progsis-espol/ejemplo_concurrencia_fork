@@ -5,7 +5,7 @@
 
 void print_help(char *command)
 {
-	printf("Cliente simple de descarga de archivos.\n");
+	printf("Cliente ejemplo aplicación eco.\n");
 	printf("uso:\n %s <hostname> <puerto>\n", command);
 	printf(" %s -h\n", command);
 	printf("Opciones:\n");

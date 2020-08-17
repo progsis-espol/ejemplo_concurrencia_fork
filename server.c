@@ -1,5 +1,6 @@
 #include <getopt.h>
 #include <limits.h>
+#include <sys/wait.h>
 
 #include "common.h"
 
@@ -7,11 +8,21 @@ void atender_cliente(int connfd);
 
 void print_help(char *command)
 {
-	printf("Servidor simple de descarga de archivos.\n");
+	printf("Servidor ejemplo apliación eco.\n");
 	printf("uso:\n %s <puerto>\n", command);
 	printf(" %s -h\n", command);
 	printf("Opciones:\n");
 	printf(" -h\t\t\tAyuda, muestra este mensaje\n");
+}
+
+/**
+ * Recoge hijos zombies...
+ */
+void recoger_hijos(int signal){
+	while(waitpid(-1, 0, WNOHANG) >0)
+		;
+
+	return;
 }
 
 int main(int argc, char **argv)
@@ -53,6 +64,9 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+	//Registra funcion para recoger hijos zombies
+	signal(SIGCHLD, recoger_hijos);
+
 	//Abre un socket de escucha en port
 	listenfd = open_listenfd(port);
 
@@ -65,14 +79,24 @@ int main(int argc, char **argv)
 		clientlen = sizeof(clientaddr);
 		connfd = accept(listenfd, (struct sockaddr *)&clientaddr, &clientlen);
 
-		/* Determine the domain name and IP address of the client */
-		hp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
-					sizeof(clientaddr.sin_addr.s_addr), AF_INET);
-		haddrp = inet_ntoa(clientaddr.sin_addr);
 
-		printf("server conectado a %s (%s)\n", hp->h_name, haddrp);
-		atender_cliente(connfd);
-		printf("server desconectando a %s (%s)\n", hp->h_name, haddrp);
+		//El proceso hijo atiende al cliente
+		if(fork() == 0){
+			close(listenfd);
+
+			/* Determine the domain name and IP address of the client */
+			hp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
+						sizeof(clientaddr.sin_addr.s_addr), AF_INET);
+			haddrp = inet_ntoa(clientaddr.sin_addr);
+
+			printf("server conectado a %s (%s)\n", hp->h_name, haddrp);
+			atender_cliente(connfd);
+			printf("server desconectando a %s (%s)\n", hp->h_name, haddrp);
+
+			close(connfd);
+
+			exit(0);
+		}
 
 		close(connfd);
 	}
