@@ -1,22 +1,13 @@
-# Práctica uso de sockets
-Práctica sobre uso básico de sockets en Linux usando C para la materia Programación de Sistemas (CCPG1008) de la ESPOL.
+# Ejemplo uso de sockets y fork() para concurrencia de conexiones
+Ejemplo sobre uso básico de sockets en Linux usando C para la materia Programación de Sistemas (CCPG1008) de la ESPOL.
 
 ## Instrucciones
-La práctica consiste en crear una aplicación cliente - servidor para descargar archivos desde un servidor remoto. La aplicación debe implementar la descarga remota de archivos de la siguiente manera:
-1. El cliente debe preguntar al usuario el archivo que desea descargar desde un prompt en consola.
-2. El cliente debe enviar esta información al servidor a traves de un socket TCP/IP.
-3. El servidor revisa si el nombre del archivo recibido corresponde a un archivo valido y disponible.
-4. El servidor debe responder con el tamaño del archivo o cero si el archivo no existe.
-5. El cliente debe responder con "READY" indicando al servidor que esta listo para recibir el archivo completo.
-6. El servidor debe enviar el archivo completo a traves del socket.
-7. El cliente debe recibir el archivo y grabarlo con el mismo nombre en el disco duro.
-
-Toda comunicación entre cliente y servidor debe ser enviada en modo ASCII con salto de línea al final, excepto la transmisión del contenido del archivo, el cual debe ser enviado en binario sin ninguna transformación.
+Esta aplicación cliente - servidor admite la conexión simultanea de varios cliente mediante la creación de un proceso hijo por cliente usando *fork()* en el servidor. La aplicación es un *eco* cliente - servidor. Es decir, el usuario ingresa una línea de texto desde el cliente, el cliente la envia al servidor y el servidor la envia de regreso.
 
 El programa servidor *server* tiene el siguiente comportamiento:
 ```
 $ ./server -h
-Servidor simple de descarga de archivos.
+Servidor ejemplo apliación eco.
 uso:
  ./server <puerto>
  ./server -h
@@ -27,7 +18,7 @@ Opciones:
 El programa cliente *client* tiene el siguiente comportamiento:
 ```
 $ ./client -h
-Cliente simple de descarga de archivos.
+Cliente ejemplo aplicación eco.
 uso:
  ./client <hostname> <puerto>
  ./client -h
@@ -42,13 +33,6 @@ Ingrese el nombre del archivo a descargar: prueba.txt
 Descargando y grabando en disco prueba.txt (65 bytes)...
 Ingrese el nombre del archivo a descargar:
 ```
-
-## Código ejemplo
-Este repositorio contiene código ejemplo de una aplicación *eco* cliente - servidor. Es decir, el usuario ingresa una línea de texto desde el cliente, el cliente la envia al servidor y el servidor la envia de regreso.
-
-## Entregable
-Modificar el código ejemplo en este repositorio para implementar la aplicación cliente - servidor de descarga de archivos.
-
 ## Compilación
 Para compilar cliente y servidor:
 ```
@@ -66,5 +50,3 @@ Para compilar cliente y servidor habilitando la herramienta AddressSanitizer, fa
 ```
 $ make sanitize
 ```
-## Integrantes
-TODO: Nombres integrantes y el trabajo que hizó cada uno...
