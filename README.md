@@ -25,13 +25,17 @@ uso:
 Opciones:
  -h			Ayuda, muestra este mensaje
 ```
-Asumiendo que el servidor esta corriendo en una maquina con la IP 192.168.100 en el puerto 8080 y que tiene un archivo *prueba.txt* con 65 bytes de tamaño. Ejemplo de ejecución del cliente:
+Asumiendo que el servidor esta corriendo en una maquina con la IP 192.168.1.100 en el puerto 8080. Ejemplo de ejecución del cliente:
 ```
-$ ./client 192.168.100 8080
-Conectado exitosamente a 192.168.100 en el puerto 8080.
-Ingrese el nombre del archivo a descargar: prueba.txt
-Descargando y grabando en disco prueba.txt (65 bytes)...
-Ingrese el nombre del archivo a descargar:
+$ ./client 192.168.1.100 8080
+Conectado exitosamente a 192.168.1.100 en el puerto 8080.
+Ingrese texto para enviar al servidor, escriba CHAO para terminar...
+> hola
+Recibido: hola
+> CHAO
+Recibido: BYE
+> 
+Desconectando...
 ```
 ## Compilación
 Para compilar cliente y servidor:
